@@ -11,7 +11,7 @@
     <parent>
         <groupId>me.soapiee</groupId>
         <artifactId>tfquiz-parent</artifactId>
-        <version>1.4.3</version>
+        <version>1.4.6</version>
     </parent>
 
     <properties>
@@ -54,6 +54,11 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>ca.bkaw</groupId>
+                <artifactId>paper-nms-maven-plugin</artifactId>
+                <version>1.4.10</version>
             </plugin>
         </plugins>
         <resources>

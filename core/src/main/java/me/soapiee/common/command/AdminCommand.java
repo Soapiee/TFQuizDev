@@ -1,19 +1,18 @@
 package me.soapiee.common.command;
 
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.conversations.ReloadConvo;
 import me.soapiee.common.enums.GameState;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
 import me.soapiee.common.instance.cosmetic.GameSign;
 import me.soapiee.common.instance.logic.TeleportTask;
-import me.soapiee.common.listener.PlayerListener;
 import me.soapiee.common.manager.GameManager;
 import me.soapiee.common.manager.MessageManager;
 import me.soapiee.common.utils.Keys;
 import me.soapiee.common.utils.Logger;
 import me.soapiee.common.utils.PlayerCache;
 import me.soapiee.common.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -28,6 +27,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.conversations.Conversable;
+import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -35,59 +36,36 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class AdminCommand implements CommandExecutor, TabCompleter {
 
     private final TFQuiz main;
     private final PlayerCache playerCache;
-    private final PlayerListener playerListener;
     private final MessageManager messageManager;
     private final GameManager gameManager;
     private final Logger logger;
 
-    private final HashSet<UUID> confirmation;
+    private final ConversationFactory convoFactory;
 
-    public AdminCommand(TFQuiz main, PlayerListener playerListener) {
+    public AdminCommand(TFQuiz main) {
         this.main = main;
         playerCache = main.getPlayerCache();
-        this.playerListener = playerListener;
         messageManager = main.getMessageManager();
         gameManager = main.getGameManager();
         logger = main.getCustomLogger();
-        confirmation = new HashSet<>();
-    }
 
-    public void reloadCheck(CommandSender sender) {
-        sender.sendMessage(Utils.colour(messageManager.get(Message.ADMINRELOADINPROGRESS)));
-        String reloadOutcome = Utils.colour(messageManager.get(Message.ADMINRELOADSUCCESS));
-
-        for (Game game : gameManager.getGames()) {
-            game.reset(true, true);
-            if (game.getHologram() != null) game.getHologram().despawn();
-            game.setState(GameState.CLOSED);
-        }
-
-        boolean errors = false;
-        if (!messageManager.load(sender)) errors = true;
-        if (!gameManager.reloadAll(sender, playerListener)) errors = true;
-
-        if (errors) reloadOutcome = Utils.colour(messageManager.get(Message.ADMINRELOADERROR));
-
-        if (sender instanceof Player) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + sender.getName() + " " + reloadOutcome);
-        }
-
-        sender.sendMessage(reloadOutcome);
+        convoFactory = new ConversationFactory(main)
+                .withFirstPrompt(new ReloadConvo(main))
+                .withTimeout(10)
+                .addConversationAbandonedListener(main.getPlayerListener())
+                .withEscapeSequence("cancel");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof CommandBlock) return true;
-
 
         String adminHelp = Utils.colour(messageManager.get(Message.ADMINCMDUSAGE));
         if (args.length == 0) {
@@ -111,28 +89,25 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 if (args.length == 1) {
-                    if (player != null) { // sender is instance of a player
-                        confirmation.add(player.getUniqueId());
-                    }
-                    sender.sendMessage(Utils.colour("&cThis will force reset all games, all scheduled games, and return all players to the lobby spawn"));
-                    sender.sendMessage(Utils.colour("&cType '/tf reload confirm' to confirm"));
-                    return true;
-                }
-                if (args.length == 2) {
-                    if (player != null) { // sender is instance of a player
-                        if (args[1].equals("confirm")) {
-                            if (confirmation.contains(player.getUniqueId())) {
-                                reloadCheck(player);
-                                confirmation.remove(player.getUniqueId());
-                                return true;
+                    if (sender instanceof Conversable) {
+
+                        //sender is player
+                        if (player != null) {
+                            String activeConvo = player.getPersistentDataContainer().get(Keys.ACTIVE_CONVERSATION, PersistentDataType.STRING);
+
+                            if (activeConvo == null) {
+                                player.getPersistentDataContainer().set(Keys.ACTIVE_CONVERSATION, PersistentDataType.STRING, "reloadConvo");
+                                convoFactory.buildConversation((Conversable) sender).begin();
                             }
-                            sender.sendMessage(adminHelp);
                             return true;
                         }
-                    } else { //is console
-                        reloadCheck(sender);
+
+                        //sender is console
+                        convoFactory.buildConversation((Conversable) sender).begin();
                         return true;
                     }
+                    //not console or a player
+                    return true;
                 }
                 sender.sendMessage(Utils.colour(messageManager.get(Message.ADMINRELOADCMDUSAGE)));
                 return true;
@@ -495,48 +470,31 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                         }
 
                         GameSign sign = gameManager.getSign(args[2]);
+                        if (sign == null) {
+                            sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNINVALIDSIGNID)));
+                            return true;
+                        }
                         new TeleportTask(player, sign.getLocation()).runTaskLater(main, 1);
                         return true;
 
                     case "edit":
-                        // /tf sign edit <lineNo> "text..."
                         // /tf sign edit <ID> <lineNo> "text..."
-                        int lineNo = -1;
-                        String signID = null;
-                        Sign block = null;
 
                         if (args.length < 4) {
                             sender.sendMessage(signHelp);
                             return true;
                         }
 
-                        if (player != null) { // sender is instance of Player
-                            Block targetBlock = player.getTargetBlock(null, 5);
-
-                            if (targetBlock.getState() instanceof Sign) {
-                                block = (Sign) targetBlock.getState();
-                                signID = block.getPersistentDataContainer().get(Keys.GAME_SIGN, PersistentDataType.STRING);
-                            }
+                        int lineNo;
+                        try {
+                            Integer.parseInt(args[2]);
+                            lineNo = Integer.parseInt(args[3]) - 1;
+                        } catch (NumberFormatException ex) {
+                            sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNEDITIDCMDUSAGE)));
+                            return true;
                         }
+                        String signID = args[2];
 
-                        if (block == null) { // is console or not looking at a sign
-                            try {
-                                Integer.parseInt(args[2]);
-                                lineNo = Integer.parseInt(args[3]) - 1;
-                            } catch (NumberFormatException ex) {
-                                sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNEDITIDCMDUSAGE)));
-                                return true;
-                            }
-                            signID = args[2];
-                        } else {
-                            try {
-                                lineNo = Integer.parseInt(args[2]) - 1;
-                            } catch (NumberFormatException ex) {
-                                sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNEDITCMDUSAGE)));
-                                return true;
-                            }
-
-                        }
                         if (lineNo < 0 || lineNo > 3) {
                             sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNINVALIDLINENUM)));
                             return true;
@@ -550,13 +508,12 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
 
                         StringBuilder builder = new StringBuilder();
                         int a = 4;
-                        if (block != null) a = 3;
                         for (int i = a; i <= args.length - 1; i++) {
                             builder.append(args[i]);
                             if (i != args.length - 1) builder.append(" ");
                         }
 
-                        gameSign.update(lineNo, builder.toString());
+                        gameSign.update((lineNo - 1), builder.toString());
                         gameManager.saveSign(gameSign);
 
                         sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.SIGNEDITED, signID)));
@@ -576,7 +533,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                             sender.sendMessage(invalidGameID);
                             return true;
                         }
-
 
                         String inputID = null;
                         if (args.length == 3) { // a signID was provided
@@ -609,7 +565,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                                 }
                             }
                         }
-
 
                         if (signBlock == null && player != null) { // will be null when not looking at a sign
                             if (inputID == null) {
@@ -653,7 +608,8 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                                 }
 
                                 GameSign signToRemove = gameManager.getSign(inputID);
-                                signToRemove.getLocation().getWorld().dropItem(signToRemove.getLocation(), new ItemStack(signToRemove.getMaterial()));
+                                if (player != null)
+                                    signToRemove.getLocation().getWorld().dropItem(signToRemove.getLocation(), new ItemStack(signToRemove.getMaterial()));
                                 gameManager.deleteSign(inputID);
                                 sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.SIGNREMOVED, inputID)));
                                 return true;
@@ -669,8 +625,9 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-//      Usage: /tf <list|setspawn|game|sign> <game ID> <open|close|add|remove|setspawn> <locID>
-//      Usage: /tf <list|setspawn|sign> <sign ID> <list|add|remove|edit> <lineNo> text...
+//      Usage: /tf <list|setspawn>
+//      Usage: /tf game <game ID> <open|close|add|remove|setspawn> <locID>
+//      Usage: /tf sign <sign ID> <list|add|remove|edit> <lineNo> text...
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         final List<String> results = new ArrayList<>();
 

@@ -28,6 +28,14 @@ admin_reload_command_usage: "&cUsage: /tf reload"
 admin_reload_success: "&aSuccessfully reloaded TFQuiz"
 admin_reload_error: "&cRan into an error whilst reloading TFQuiz"
 admin_reload_inprogress: "&eReloading configuration..."
+
+reload_convo_cancel: "&cYou have cancelled the reload"
+reload_convo_invalid: "&cPlease type 'CONFIRM' or 'CANCEL'"
+reload_convo_start:
+  - "&cThis will force reset all games, all scheduled games, and return all players to the lobby spawn"
+  - "&cType 'confirm' to confirm the reload"
+  - "&cThis will time out in 10 seconds"
+
 admin_list_command_usage: "&cUsage: /tf list"
 admin_setspawn_command_usage: "&cUsage: /tf setspawn"
 admin_lobby_spawn_set: "&aThe Lobby spawn has been set"
@@ -205,4 +213,9 @@ sign_invalid_signID_error: "&cYou must input a invalid signID. &7(Use /sign list
 not_looking_at_game_sign: "&cYou are not looking at a game sign"
 not_looking_at_sign: "&cYou are not looking at a sign"
 sign_already_exists: "&cThis sign is already a game sign"
+
+sign_convo_start: "&eWelcome to the GameSign text editor."
+sign_convo_line_prompt: "&eWhich line would you like to edit? Options: 1 - 4 &7(Type 'EXIT' to exit the editor)"
+sign_convo_line_invalid: "&cInput must be between 1 and 4"
+sign_convo_text_prompt: "&ePlease state the text you want to put on line &6&l%line_number%"
 ## NEW/UNSPECIFIED MESSAGES WILL APPEAR AT THE BOTTOM OF THIS FILE (ABOVE THIS LINE)

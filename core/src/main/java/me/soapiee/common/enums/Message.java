@@ -13,7 +13,7 @@ public enum Message {
                     + "\n#01d54a/tf reload &7- Reloads the plugin"
                     + "\n#01d54a/tf list &7- Lists all loaded games"
                     + "\n#01d54a/tf setspawn &7- Sets the lobby spawn"
-                    + "\n#01d54a/tf addGame "
+//                    + "\n#01d54a/tf addGame "
                     + "\n#01d54a/tf game <gameID> setSpawn &7- Sets the spawn point of a specified game"
                     + "\n#01d54a/tf game <gameID> setHoloSpawn &7- Sets the hologram location of a specified game"
                     + "\n#01d54a/tf game <gameID> open|close &7- Manually opens or closes a game"
@@ -21,7 +21,7 @@ public enum Message {
                     + "\n#01d54a/tf game <gameID> end [-without] &7- Ends a game. Use the flag \"-without\" to instantly end without winners."
                     + "\n#01d54a/tf game <gameID> addPlayer|removePlayer &7- Adds|Removes a player from the game"
                     + "\n#01d54a/tf game <gameID> info &7- &7- Displays information based on the games setup"
-                    + "\n#01d54a/tf game <gameID> delete &7- Deletes a game"
+//                    + "\n#01d54a/tf game <gameID> delete &7- Deletes a game"
                     + "\n#01d54a/tf sign add <gameID> &7- Adds a new game sign for the specified game"
                     + "\n#01d54a/tf sign remove <signID> &7- Deletes an game sign"
                     + "\n#01d54a/tf sign edit <signID> <lineNo> text... &7- Edits the text on the game sign "),
@@ -29,6 +29,14 @@ public enum Message {
     ADMINRELOADSUCCESS("admin_reload_success", "&aSuccessfully reloaded TFQuiz"),
     ADMINRELOADERROR("admin_reload_error", "&cRan into an error whilst reloading TFQuiz"),
     ADMINRELOADINPROGRESS("admin_reload_inprogress", "&eReloading configuration..."),
+
+    RELOADCONVOCANCEL("reload_convo_cancel", "&cYou have cancelled the reload"),
+    RELOADCONVOINVALID("reload_convo_invalid", "&cPlease type 'CONFIRM' or 'CANCEL'"),
+    RELOADCONVOSTART("reload_convo_start",
+            "&cThis will force reset all games, all scheduled games, and return all players to the lobby spawn"
+                    + "\n&cType 'confirm' to confirm the reload"
+                    + "\n&cThis will time out in 10 seconds"),
+
     ADMINLISTCMDUSAGE("admin_list_command_usage", "&cUsage: /tf list"),
     ADMINSETLOBBYSPAWNCMDUSAGE("admin_set_lobbyspawn_command_usage", "&cUsage: /tf setspawn"),
     ADMINSETLOBBYSPAWN("admin_lobby_spawn_set", "&aThe Lobby spawn has been set"),
@@ -202,7 +210,12 @@ public enum Message {
     SIGNINVALIDSIGNID("sign_invalid_signID", "&cYou must input a invalid signID"),
     SIGNNOTLOOKINGATGAMESIGN("not_looking_at_game_sign", "&cYou are not looking at an game sign"),
     SIGNNOTLOOKINGATSIGN("not_looking_at_sign", "&cYou are not looking at a sign"),
-    SIGNALREADYEXISTS("sign_already_exists", "&cThis sign is already an game sign");
+    SIGNALREADYEXISTS("sign_already_exists", "&cThis sign is already an game sign"),
+
+    SIGNCONVOSTART("sign_convo_start", "&eWelcome to the GameSign text editor."),
+    SIGNCONVOLINEPROMPT("sign_convo_line_prompt", "&eWhich line would you like to edit? Options: 1 - 4 &7(Type 'EXIT' to exit the editor)"),
+    SIGNCONVOLINEINVALID("sign_convo_line_invalid", "&cInput must be between 1 and 4"),
+    SIGNCONVOTEXTPROMPT("sign_convo_text_prompt", "&ePlease state the text you want to put on line &6&l%line_number%");
 
     public final String path;
     private final String defaultText;

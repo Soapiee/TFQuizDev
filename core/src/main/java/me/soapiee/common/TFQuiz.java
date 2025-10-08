@@ -34,6 +34,7 @@ public final class TFQuiz extends JavaPlugin {
     private SpectatorManager specManager;
     private VersionManager versionManager;
     private PlayerCache playerCache;
+    private PlayerListener playerListener;
     private VaultHook vaultHook;
     private Logger logger;
 
@@ -58,12 +59,12 @@ public final class TFQuiz extends JavaPlugin {
         gameManager = new GameManager(this);
         playerCache = new PlayerCache();
 
-        PlayerListener playerListener = new PlayerListener(this);
+        playerListener = new PlayerListener(this);
         Bukkit.getPluginManager().registerEvents(playerListener, this);
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
         Bukkit.getPluginManager().registerEvents(new ChatListener(this), this);
 
-        getCommand("tf").setExecutor(new AdminCommand(this, playerListener));
+        getCommand("tf").setExecutor(new AdminCommand(this));
         getCommand("game").setExecutor(new PlayerCommand(this));
 
         UpdateChecker updateChecker = new UpdateChecker(this, 125077);
@@ -107,6 +108,10 @@ public final class TFQuiz extends JavaPlugin {
 
     public PlayerCache getPlayerCache() {
         return playerCache;
+    }
+
+    public PlayerListener getPlayerListener() {
+        return playerListener;
     }
 
     public MessageManager getMessageManager() {

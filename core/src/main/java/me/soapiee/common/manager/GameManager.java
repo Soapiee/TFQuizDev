@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class GameManager {
 
@@ -195,31 +196,31 @@ public class GameManager {
 
         return errors;
     }
-
-    public void deleteGame(Game game) {
-        // Cancel any schedulers
-        Scheduler scheduler = getScheduler(game.getID());
-        if (scheduler != null) {
-            try {
-                scheduler.setPlayed();
-                scheduler.cancel();
-            } catch (IllegalStateException ignored) {
-            }
-        }
-
-        // Remove game from hashMap
-        int gameID = game.getID();
-        games.remove(game);
-
-        // Remove it from the config
-        FileConfiguration config = main.getConfig();
-        config.set("games." + gameID, null);
-        main.saveConfig();
-    }
-
-    public void addGame() {
-
-    }
+//TODO:
+//    public void deleteGame(Game game) {
+//        // Cancel any schedulers
+//        Scheduler scheduler = getScheduler(game.getID());
+//        if (scheduler != null) {
+//            try {
+//                scheduler.setPlayed();
+//                scheduler.cancel();
+//            } catch (IllegalStateException ignored) {
+//            }
+//        }
+//
+//        // Remove game from hashMap
+//        int gameID = game.getID();
+//        games.remove(game);
+//
+//        // Remove it from the config
+//        FileConfiguration config = main.getConfig();
+//        config.set("games." + gameID, null);
+//        main.saveConfig();
+//    }
+//
+//    public void addGame() {
+//
+//    }
 
     public Game getGame(Player player) {
         for (Game game : games) {
@@ -329,12 +330,22 @@ public class GameManager {
         return disallowedCommands;
     }
 
+    public String getLowestNumber(Set<String> numbers) {
+        int lowest = 1;
+
+        while (numbers.contains(String.valueOf(lowest))) {
+            lowest++;
+        }
+
+        return String.valueOf(lowest);
+    }
+
     public void saveSign(Sign block, int gameID) { //saves a newly created (block)sign (created via command)
         Location loc = block.getLocation();
 
         FileConfiguration config = main.getConfig();
         if (!config.isConfigurationSection("signs")) config.createSection("signs");
-        String signID = String.valueOf(config.getConfigurationSection("signs").getKeys(false).size() + 1);
+        String signID = getLowestNumber(config.getConfigurationSection("signs").getKeys(false));
 
         config.set("signs." + signID + ".game_ID", gameID);
         config.set("signs." + signID + ".material", block.getType().toString());

@@ -11,13 +11,20 @@
     <parent>
         <groupId>me.soapiee</groupId>
         <artifactId>tfquiz-parent</artifactId>
-        <version>1.4.3</version>
+        <version>1.4.6</version>
     </parent>
 
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>bytecode.space</id>
+            <url>https://repo.bytecode.space/repository/maven-public/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <directory>../target</directory>
@@ -41,6 +48,19 @@
                                 </includes>
                             </artifactSet>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>ca.bkaw</groupId>
+                <artifactId>paper-nms-maven-plugin</artifactId>
+                <version>1.4.10</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>remap</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -69,6 +89,12 @@
             <groupId>me.soapiee</groupId>
             <artifactId>tfquiz-core</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.bkaw</groupId>
+            <artifactId>paper-nms</artifactId>
+            <version>1.21.9-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.soapiee</groupId>
@@ -158,6 +184,11 @@
         <dependency>
             <groupId>me.soapiee</groupId>
             <artifactId>tfquiz-nms_1_21_R5</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>me.soapiee</groupId>
+            <artifactId>tfquiz-nms_1_21_R6</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

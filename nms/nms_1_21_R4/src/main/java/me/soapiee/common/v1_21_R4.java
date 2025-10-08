@@ -63,7 +63,6 @@ class v1_21_R4 implements NMSProvider {
     @Override
     public void unSetSpectator(Player player) {
         ServerPlayer p = ((CraftPlayer) player).getHandle();
-
         p.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.CHANGE_GAME_MODE, 2));
     }
 

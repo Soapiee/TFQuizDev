@@ -1,8 +1,10 @@
 package me.soapiee.common.listener;
 
 import me.soapiee.common.TFQuiz;
+import me.soapiee.common.conversations.SignConvo;
 import me.soapiee.common.enums.Message;
 import me.soapiee.common.instance.Game;
+import me.soapiee.common.instance.cosmetic.GameSign;
 import me.soapiee.common.manager.GameManager;
 import me.soapiee.common.utils.Keys;
 import me.soapiee.common.utils.Utils;
@@ -10,6 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.conversations.ConversationAbandonedEvent;
+import org.bukkit.conversations.ConversationAbandonedListener;
+import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,10 +29,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class PlayerListener implements Listener {
+public class PlayerListener implements Listener, ConversationAbandonedListener {
 
     private final TFQuiz main;
     private final GameManager gameManager;
@@ -37,10 +43,14 @@ public class PlayerListener implements Listener {
     private boolean breakblocks;
     private boolean placeblocks;
     private boolean teleport;
+    private final ConversationFactory convoFactory;
 
     public PlayerListener(TFQuiz main) {
         this.main = main;
         gameManager = main.getGameManager();
+        convoFactory = new ConversationFactory(main)
+                .withEscapeSequence("EXIT")
+                .addConversationAbandonedListener(this);
         ruleCheck();
     }
 
@@ -167,22 +177,48 @@ public class PlayerListener implements Listener {
         if (signBlock.getPersistentDataContainer().has(Keys.GAME_SIGN, PersistentDataType.STRING)) {
             Player player = event.getPlayer();
             String signID = signBlock.getPersistentDataContainer().get(Keys.GAME_SIGN, PersistentDataType.STRING);
-            if (gameManager.getSign(signID) == null) return;
+            GameSign gameSign = gameManager.getSign(signID);
+            if (gameSign == null) return;
             Game game = gameManager.getGame(signID);
 
             event.setCancelled(true);
-            //TODO:
-//            if (action == Action.RIGHT_CLICK_BLOCK) {
-//                if (player.hasPermission("tfquiz.admin.signs")) {
-//                    //send text prompt either with sign ID or asking them what text they want to change
-//                }
-//                return;
-//            }
+
+            //TODO: Call sign convo
+            if (action == Action.RIGHT_CLICK_BLOCK) {
+                if (player.hasPermission("tfquiz.admin.signs")) {
+                    //check if player is already in a conversation
+                    String activeConvo = player.getPersistentDataContainer().get(Keys.ACTIVE_CONVERSATION, PersistentDataType.STRING);
+
+                    if (activeConvo == null) {
+                        //start text prompt asking them what text they want to change
+                        player.getPersistentDataContainer().set(Keys.ACTIVE_CONVERSATION, PersistentDataType.STRING, "signConvo");
+                        player.getPersistentDataContainer().set(Keys.GAME_SIGN, PersistentDataType.STRING, signID);
+                        convoFactory.withFirstPrompt(new SignConvo(main));
+                        convoFactory.buildConversation(player).begin();
+                    }
+                }
+                return;
+            }
 
             if (action == Action.LEFT_CLICK_BLOCK) {
                 if (game != null) Bukkit.dispatchCommand(player, "game join " + game.getID());
             }
         }
+    }
+
+    @Override
+    public void conversationAbandoned(@NotNull ConversationAbandonedEvent abandonedEvent) {
+        Player player = (Player) abandonedEvent.getContext().getForWhom();
+        String convoType = player.getPersistentDataContainer().get(Keys.ACTIVE_CONVERSATION, PersistentDataType.STRING);
+        player.getPersistentDataContainer().remove(Keys.GAME_SIGN);
+
+        if (convoType == null) return;
+        player.getPersistentDataContainer().remove(Keys.ACTIVE_CONVERSATION);
+
+        if (convoType.equalsIgnoreCase("signConvo"))
+            player.sendMessage(Utils.colour("&cYou have exited the GameSign editor"));
+        if (convoType.equalsIgnoreCase("reloadConvo"))
+            player.sendMessage(Utils.colour("&cYou have cancelled the reload"));
     }
 
     @EventHandler

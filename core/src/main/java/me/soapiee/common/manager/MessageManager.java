@@ -161,6 +161,7 @@ public class MessageManager {
 
         return get(messageEnum).replace("%countdown%", replacement)
                 .replace("%round_countdown%", replacement)
-                .replace("%game_ID%", String.valueOf(integer));
+                .replace("%game_ID%", String.valueOf(integer))
+                .replace("%line_number%", String.valueOf(integer));
     }
 }

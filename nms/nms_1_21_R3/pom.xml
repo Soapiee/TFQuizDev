@@ -96,6 +96,12 @@
             <classifier>remapped-mojang</classifier>
             <scope>provided</scope>
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>ca.bkaw</groupId>-->
+        <!--            <artifactId>paper-nms</artifactId>-->
+        <!--            <version>1.21.4-SNAPSHOT</version>-->
+        <!--            <scope>provided</scope>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>me.soapiee</groupId>
             <artifactId>tfquiz-core</artifactId>
