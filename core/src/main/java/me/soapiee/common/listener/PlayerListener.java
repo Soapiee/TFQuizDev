@@ -217,8 +217,9 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
 
         if (convoType.equalsIgnoreCase("signConvo"))
             player.sendMessage(Utils.colour("&cYou have exited the GameSign editor"));
-        if (convoType.equalsIgnoreCase("reloadConvo"))
-            player.sendMessage(Utils.colour("&cYou have cancelled the reload"));
+        if (convoType.equalsIgnoreCase("reloadConvo")) {
+            if (!abandonedEvent.gracefulExit()) player.sendMessage(Utils.colour("&cYou have cancelled the reload"));
+        }
     }
 
     @EventHandler

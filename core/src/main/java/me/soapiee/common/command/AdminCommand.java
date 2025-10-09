@@ -137,6 +137,9 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 }
                 return true;
             case "removeholos":
+
+                if (!main.debugMode()) return true;
+
                 int count = 0;
 
                 if (args.length == 1) {
@@ -175,6 +178,22 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
 ////                sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEADDED)));
 ////                sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEADDEDERROR)));
 //                return true;
+
+            case "nms": // /tf spec <player>
+                if (!main.debugMode()) return true;
+                if (args.length != 2) return true;
+                Player specPlayer = Bukkit.getPlayer(args[1]);
+
+                main.getSpecManager().setSpectator(specPlayer);
+                return true;
+
+            case "unms":
+                if (!main.debugMode()) return true;
+                if (args.length != 2) return true;
+                Player unspecPlayer = Bukkit.getPlayer(args[1]);
+
+                main.getSpecManager().unSetSpectator(unspecPlayer);
+                return true;
 
             case "game":
                 String gameHelp = messageManager.get(Message.GAMEADMINCMDUSAGE);

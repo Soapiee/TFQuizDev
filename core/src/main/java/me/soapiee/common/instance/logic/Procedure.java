@@ -166,11 +166,13 @@ public class Procedure implements Listener {
 
         //if there is a single playing player remaining
         if (game.getPlayingPlayers().size() == 1) {
-            game.announceWinners();
-            Player player = game.getPlayingPlayers().iterator().next();
-            game.reset(true, false);
-            game.getReward().give(player);
-            return true;
+            if (!main.debugMode()) {
+                game.announceWinners();
+                Player player = game.getPlayingPlayers().iterator().next();
+                game.reset(true, false);
+                game.getReward().give(player);
+                return true;
+            }
         }
 
         //if there are no unique questions left to ask, or the maximum amount of rounds was reached

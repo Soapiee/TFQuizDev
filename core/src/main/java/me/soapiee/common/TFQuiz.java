@@ -126,4 +126,8 @@ public final class TFQuiz extends JavaPlugin {
     public Logger getCustomLogger() {
         return logger;
     }
+
+    public boolean debugMode() {
+        return getConfig().getBoolean("debug_mode", false);
+    }
 }

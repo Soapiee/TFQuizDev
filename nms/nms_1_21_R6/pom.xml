@@ -20,13 +20,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>bytecode.space</id>
-            <url>https://repo.bytecode.space/repository/maven-public/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <build>
         <plugins>
             <plugin>
@@ -75,11 +68,6 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>ca.bkaw</groupId>
-                <artifactId>paper-nms-maven-plugin</artifactId>
-                <version>1.4.10</version>
-            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -106,12 +94,6 @@
             <artifactId>spigot</artifactId>
             <version>${mc.version}</version>
             <classifier>remapped-mojang</classifier>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>ca.bkaw</groupId>
-            <artifactId>paper-nms</artifactId>
-            <version>1.21.9-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
