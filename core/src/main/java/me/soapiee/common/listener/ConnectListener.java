@@ -19,33 +19,33 @@ public class ConnectListener implements Listener {
     private final SpectatorManager specManager;
 
     public ConnectListener(TFQuiz main) {
-        this.gameManager = main.getGameManager();
-        this.playerCache = main.getPlayerCache();
-        this.specManager = main.getSpecManager();
+        gameManager = main.getGameManager();
+        playerCache = main.getPlayerCache();
+        specManager = main.getSpecManager();
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (this.gameManager.getEnforceLobbySpawn()) player.teleport(this.gameManager.getLobbySpawn());
+        if (gameManager.getEnforceLobbySpawn()) player.teleport(gameManager.getLobbySpawn());
 
         if (specManager.spectatorsExist()) specManager.updateTab(player);
 
-        if (!player.hasPlayedBefore()) this.playerCache.addOfflinePlayer(player);
+        if (!player.hasPlayedBefore()) playerCache.addOfflinePlayer(player);
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        Game game = this.gameManager.getGame(player);
+        Game game = gameManager.getGame(player);
         if (game != null) {
             if (game.isSpectator(player)) {
                 player.setGameMode(GameMode.SURVIVAL);
             }
             if (game.isPhysicalArena()) {
-                player.teleport(this.gameManager.getLobbySpawn());
+                player.teleport(gameManager.getLobbySpawn());
             }
             game.removePlayer(player);
         }

@@ -1,6 +1,6 @@
 name: ${project.parent.name}
 main: me.soapiee.common.TFQuiz
-version: 1.4.6
+version: 1.4.8
 author: Soapiee
 prefix: TFQuiz
 
@@ -18,28 +18,29 @@ commands:
     description: Allows player to join + leave arenas
     permission: tfquiz.player
     usage: /game <list|join|leave>
+
 permissions:
   tfquiz.admin:
-    description: Allows users to use /tf
+    description: Allows access to /tf
     default: op
   tfquiz.admin.*:
-    description: Allows users to use /tf help
+    description: Allows access to /tf help
     default: op
     children:
       tfquiz.admin.signs: true
       tfquiz.admin: true
       tfquiz.admin.bypassflags: true
   tfquiz.admin.signs:
-    description: Allows users to use /tf sign
+    description: Allows access to /tf sign
     default: op
   tfquiz.admin.bypassflags:
     description: Allows users to bypass the game flags
     default: op
   tfquiz.reload:
-    description: Allows users to use /tf reload
+    description: Allows access to /tf reload
     default: false
   tfquiz.player:
-    description: Allows users to use /game
+    description: Allows access to /game
     default: true
   tfquiz.player.*:
     description: Allows users to use all /game commands

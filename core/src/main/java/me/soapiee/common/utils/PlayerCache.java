@@ -12,15 +12,15 @@ public class PlayerCache {
     private final Set<OfflinePlayer> offlinePlayers;
 
     public PlayerCache() {
-        this.offlinePlayers = new HashSet<>();
-        this.offlinePlayers.addAll(Arrays.asList(Bukkit.getServer().getOfflinePlayers()));
+        offlinePlayers = new HashSet<>();
+        offlinePlayers.addAll(Arrays.asList(Bukkit.getServer().getOfflinePlayers()));
     }
 
     public void addOfflinePlayer(OfflinePlayer offlinePlayer) {
-        this.offlinePlayers.add(offlinePlayer);
+        offlinePlayers.add(offlinePlayer);
     }
 
     public Set<OfflinePlayer> getList() {
-        return this.offlinePlayers;
+        return offlinePlayers;
     }
 }
