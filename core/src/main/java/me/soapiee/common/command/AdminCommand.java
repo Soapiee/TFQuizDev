@@ -137,7 +137,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 }
                 return true;
             case "removeholos":
-
                 if (!main.debugMode()) return true;
 
                 int count = 0;
@@ -168,34 +167,32 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(Utils.colour(adminHelp));
                 return true;
 
-//            case "addgame":
-//                if (args.length != 2) {
-//                    sender.sendMessage(Utils.colour(messageManager.get(Message.ADMINLISTCMDUSAGE)));
-//                    return true;
-//                }
-//
-//                gameManager.addGame();
-////                sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEADDED)));
-////                sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEADDEDERROR)));
-//                return true;
-
-            case "nms": // /tf spec <player>
+            case "spec": // /tf spec <player>
                 if (!main.debugMode()) return true;
                 if (args.length != 2) return true;
                 Player specPlayer = Bukkit.getPlayer(args[1]);
+                if (specPlayer == null) return true;
 
                 main.getSpecManager().setSpectator(specPlayer);
                 return true;
 
-            case "unms":
+            case "unspec": // /tf unspec <player>
                 if (!main.debugMode()) return true;
                 if (args.length != 2) return true;
                 Player unspecPlayer = Bukkit.getPlayer(args[1]);
+                if (unspecPlayer == null) return true;
 
                 main.getSpecManager().unSetSpectator(unspecPlayer);
                 return true;
 
             case "game":
+//                if (args[1].toLowerCase().equals("add") {
+//                gameManager.addGame();
+//                sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEADDED)));
+//                sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEADDEDERROR)));
+//                return true;
+//                }
+//
                 String gameHelp = messageManager.get(Message.GAMEADMINCMDUSAGE);
                 if (args.length < 3 || args.length > 5) {
                     sender.sendMessage(Utils.colour(gameHelp));
@@ -224,7 +221,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
 //                        }
 //
 //                        gameManager.deleteGame(game);
-////                sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEDELETED)));
+//                sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEDELETED)));
 //                        return true;
                     case "setspawn": // /tf game <gameID> setspawn
                         if (args.length != 3) {

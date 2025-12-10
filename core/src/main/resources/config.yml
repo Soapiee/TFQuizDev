@@ -9,10 +9,6 @@
 # Sends a message in console if there is an update available
 update_notification: true
 
-# If debug mode should be enabled or not.
-# When true: Enables manual spectator toggling, force removal of holograms and shows more information in console errors.
-debug_mode: false
-
 # These only apply if a game has an arena
 arena_flags:
   allow_fall_damage: false # Should players take fall damage

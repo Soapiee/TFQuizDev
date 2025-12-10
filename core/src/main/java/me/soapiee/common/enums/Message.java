@@ -178,13 +178,12 @@ public enum Message {
                     + "\n&a%winner% has won &7(Game: %game_ID%)&a!"
                     + "\n "
                     + "\n&e-----------------------------------"),
-    GAMEMNOWINNERBROADCAST("game_no_winner_broadcast",
-            "&e-----------------------------------"
-                    + "\n "
-                    + "\n&cThere were no winners as all players have been eliminated"
-                    + "\n&cThe game &7(%game_ID%) &chas ended"
-                    + "\n "
-                    + "\n&e-----------------------------------"),
+    GAMEMNOWINNERBROADCAST("game_no_winner_broadcast", "&e-----------------------------------"
+            + "\n "
+            + "\n&cThere were no winners as all players have been eliminated"
+            + "\n&cThe game &7(%game_ID%) &chas ended"
+            + "\n "
+            + "\n&e-----------------------------------"),
     GAMEITEMWINERROR("game_item_win_error", "&cYou didn't have enough space in your inventory to receive your reward, so it was dropped on the floor."),
     GAMECCMDUSAGE("game_command_usage", "&cUsage: /game <join | leave | list> <gameID>"),
     GAMEJOINCMDUSAGE("game_join_command_usage", "&cUsage: /game join <gameID>"),

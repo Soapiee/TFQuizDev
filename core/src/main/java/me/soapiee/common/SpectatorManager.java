@@ -16,35 +16,39 @@ public class SpectatorManager {
 
     public SpectatorManager(TFQuiz main) {
         this.main = main;
-        this.spectators = new HashSet<>();
+        spectators = new HashSet<>();
 
         try {
             String packageName = SpectatorManager.class.getPackage().getName();
             String version = "v" + Bukkit.getBukkitVersion().split("-")[0].replace(".", "_");
             String providerName = NMSVersion.valueOf(version).getPackage();
-//            Utils.consoleMsg(ChatColor.GREEN + providerName);
+
+            if (version.split("_")[2].equalsIgnoreCase("11")) {
+                if (isPaper()) throw new InstantiationException();
+            }
+
             provider = (NMSProvider) Class.forName(packageName + "." + providerName).newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                  ClassCastException | IllegalArgumentException ex) {
-//            ex.printStackTrace();
-            Bukkit.getLogger().log(Level.SEVERE, "[TFQuiz] Unsupported NMS version detected. The Spectator system will be diminished. Its recommended that you disable it in the config");
+            Bukkit.getLogger().log(Level.SEVERE, "[TFQuiz] Unsupported NMS version detected. The Spectator system will be diminished. Its recommended that you disable it in the config" +
+                    "\nAll other features will work as normal");
             provider = new NMS_Unsupported();
         }
     }
 
-//    public boolean isPaper() {
-//        try {
-//            Class.forName("com.destroystokyo.paper.ClientOption");
-//            return true;
-//        } catch (ClassNotFoundException ignored) {
-//        }
-//
-//        return false;
-//    }
+    private boolean isPaper() {
+        try {
+            Class.forName("com.destroystokyo.paper.ClientOption");
+            return true;
+        } catch (ClassNotFoundException ignored) {
+        }
+
+        return false;
+    }
 
     public boolean setSpectator(Player player) {
         if (provider.setSpectator(player)) {
-            this.spectators.add(player.getUniqueId());
+            spectators.add(player.getUniqueId());
             return true;
         }
         return false;
@@ -52,12 +56,12 @@ public class SpectatorManager {
 
     public void unSetSpectator(Player player) {
         provider.unSetSpectator(player);
-        this.spectators.remove(player.getUniqueId());
+        spectators.remove(player.getUniqueId());
         new GamemodeChange(player).runTaskLater(main, 1);
     }
 
     public boolean spectatorsExist() {
-        return !this.spectators.isEmpty();
+        return !spectators.isEmpty();
     }
 
     public void updateTab(Player player) {
