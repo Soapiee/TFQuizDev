@@ -109,7 +109,7 @@ public class Procedure implements Listener {
         if (!this.toEliminate.isEmpty()) {
             for (Player player : this.toEliminate) {
                 if (this.main.getGameManager().getGame(player) == this.game) {
-                    player.sendMessage(Utils.colour(messageManager.get(Message.GAMEELIMMESSAGE)));
+                    player.sendMessage(Utils.addColour(messageManager.get(Message.GAMEELIMMESSAGE)));
                     if (this.answeredCorrectly.isEmpty()) {
                         // If all players have/are to be eliminated,
                         // theres no point running NMS. However this code needs to run in order to run a winners message to the last people in the game
@@ -127,7 +127,7 @@ public class Procedure implements Listener {
         if (!this.answeredCorrectly.isEmpty()) {
             for (Player player : this.answeredCorrectly) {
                 if (this.main.getGameManager().getGame(player) == this.game) {
-                    player.sendMessage(Utils.colour(messageManager.get(Message.GAMECONTINUEDMESSAGE)));
+                    player.sendMessage(Utils.addColour(messageManager.get(Message.GAMECONTINUEDMESSAGE)));
                 }
             }
         }

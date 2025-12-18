@@ -134,7 +134,7 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
 
         for (String command : disallowedCmds) {
             if (cmd.contains(command)) {
-                player.sendMessage(Utils.colour(main.getMessageManager().get(Message.GAMEDISALLOWEDCMD)));
+                player.sendMessage(Utils.addColour(main.getMessageManager().get(Message.GAMEDISALLOWEDCMD)));
                 event.setCancelled(true);
                 return;
             }
@@ -216,9 +216,9 @@ public class PlayerListener implements Listener, ConversationAbandonedListener {
         player.getPersistentDataContainer().remove(Keys.ACTIVE_CONVERSATION);
 
         if (convoType.equalsIgnoreCase("signConvo"))
-            player.sendMessage(Utils.colour("&cYou have exited the GameSign editor"));
+            player.sendMessage(Utils.addColour("&cYou have exited the GameSign editor"));
         if (convoType.equalsIgnoreCase("reloadConvo")) {
-            if (!abandonedEvent.gracefulExit()) player.sendMessage(Utils.colour("&cYou have cancelled the reload"));
+            if (!abandonedEvent.gracefulExit()) player.sendMessage(Utils.addColour("&cYou have cancelled the reload"));
         }
     }
 

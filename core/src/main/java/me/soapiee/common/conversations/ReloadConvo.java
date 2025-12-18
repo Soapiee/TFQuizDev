@@ -39,23 +39,23 @@ public class ReloadConvo extends FixedSetPrompt {
             return Prompt.END_OF_CONVERSATION;
         }
 
-        conversationContext.getForWhom().sendRawMessage(Utils.colour(messageManager.get(Message.RELOADCONVOCANCEL)));
+        conversationContext.getForWhom().sendRawMessage(Utils.addColour(messageManager.get(Message.RELOADCONVOCANCEL)));
         return Prompt.END_OF_CONVERSATION;
     }
 
     @Override
     protected String getFailedValidationText(ConversationContext context, String invalidInput) {
-        return Utils.colour(messageManager.get(Message.RELOADCONVOINVALID));
+        return Utils.addColour(messageManager.get(Message.RELOADCONVOINVALID));
     }
 
     @Override
     public @NotNull String getPromptText(@NotNull ConversationContext conversationContext) {
-        return Utils.colour(messageManager.get(Message.RELOADCONVOSTART));
+        return Utils.addColour(messageManager.get(Message.RELOADCONVOSTART));
     }
 
     public void reloadCheck(Conversable sender) {
-        sender.sendRawMessage(Utils.colour(messageManager.get(Message.ADMINRELOADINPROGRESS)));
-        String reloadOutcome = Utils.colour(messageManager.get(Message.ADMINRELOADSUCCESS));
+        sender.sendRawMessage(Utils.addColour(messageManager.get(Message.ADMINRELOADINPROGRESS)));
+        String reloadOutcome = Utils.addColour(messageManager.get(Message.ADMINRELOADSUCCESS));
 
         for (Game game : gameManager.getGames()) {
             game.reset(true, true);
@@ -67,7 +67,7 @@ public class ReloadConvo extends FixedSetPrompt {
         if (!messageManager.load((CommandSender) sender)) errors = true;
         if (!gameManager.reloadAll((CommandSender) sender, playerListener)) errors = true;
 
-        if (errors) reloadOutcome = Utils.colour(messageManager.get(Message.ADMINRELOADERROR));
+        if (errors) reloadOutcome = Utils.addColour(messageManager.get(Message.ADMINRELOADERROR));
 
         if (sender instanceof Player) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + ((CommandSender) sender).getName() + " " + reloadOutcome);

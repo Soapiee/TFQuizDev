@@ -38,8 +38,8 @@ public class PlayerCommand implements CommandExecutor, TabCompleter {
         }
 
         Player player = (Player) sender;
-        String cmdUsage = Utils.colour(this.messageManager.get(Message.GAMECCMDUSAGE));
-        String noPermission = Utils.colour(this.messageManager.get(Message.NOPERMISSION));
+        String cmdUsage = Utils.addColour(this.messageManager.get(Message.GAMECCMDUSAGE));
+        String noPermission = Utils.addColour(this.messageManager.get(Message.NOPERMISSION));
 
         if (args.length == 0) {
             player.sendMessage(cmdUsage);
@@ -60,17 +60,17 @@ public class PlayerCommand implements CommandExecutor, TabCompleter {
                 }
 
                 if (args.length != 2) {
-                    player.sendMessage(Utils.colour(this.messageManager.get(Message.GAMEJOINCMDUSAGE)));
+                    player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMEJOINCMDUSAGE)));
                     return true;
                 }
 
                 if (this.main.getGameManager().getGame(player) != null) {
-                    player.sendMessage(Utils.colour(this.messageManager.get(Message.GAMENOTNULL)));
+                    player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMENOTNULL)));
                     return true;
                 }
 
                 //Check they provided a number/int
-                String invalidGameID = Utils.colour(this.messageManager.get(Message.GAMEINVALIDGAMEID));
+                String invalidGameID = Utils.addColour(this.messageManager.get(Message.GAMEINVALIDGAMEID));
                 int gameID;
                 try {
                     gameID = Integer.parseInt(args[1]);
@@ -84,13 +84,13 @@ public class PlayerCommand implements CommandExecutor, TabCompleter {
                     Game gameToJoin = this.main.getGameManager().getGame(gameID);
                     switch (gameToJoin.addPlayer(player)) {
                         case 1:
-                            player.sendMessage(Utils.colour(this.messageManager.get(Message.GAMEINVALIDGAMEMODE)));
+                            player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMEINVALIDGAMEMODE)));
                             return true;
                         case 2:
-                            player.sendMessage(Utils.colour(this.messageManager.get(Message.GAMEINVALIDSTATE)));
+                            player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMEINVALIDSTATE)));
                             return true;
                         case 3:
-                            player.sendMessage(Utils.colour(this.messageManager.get(Message.GAMEFULL)));
+                            player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMEFULL)));
                             return true;
                         case 0:
                             return true;
@@ -110,9 +110,9 @@ public class PlayerCommand implements CommandExecutor, TabCompleter {
                 Game gameToLeave = this.main.getGameManager().getGame(player);
                 if (gameToLeave != null) {
                     gameToLeave.removePlayer(player);
-                    player.sendMessage(Utils.colour(this.messageManager.getWithPlaceholder(Message.GAMELEAVE, gameToLeave)));
+                    player.sendMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMELEAVE, gameToLeave)));
                 } else {
-                    player.sendMessage(Utils.colour(this.messageManager.get(Message.GAMELEFTERROR)));
+                    player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMELEFTERROR)));
                 }
                 return true;
 
@@ -122,12 +122,12 @@ public class PlayerCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 if (args.length != 1) break;
-                player.sendMessage(Utils.colour(this.messageManager.get(Message.GAMELISTHEADER)));
+                player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMELISTHEADER)));
                 for (Game game : this.main.getGameManager().getGames()) {
                     String message = this.messageManager.getWithPlaceholder(Message.GAMELIST, game);
-                    TextComponent clickableText = new TextComponent(Utils.colour(message));
+                    TextComponent clickableText = new TextComponent(Utils.addColour(message));
                     clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/game join " + game.getID()));
-                    clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(Utils.colour(this.messageManager.get(Message.GAMELISTHOVER)))));
+                    clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(Utils.addColour(this.messageManager.get(Message.GAMELISTHOVER)))));
                     player.spigot().sendMessage(clickableText);
                 }
                 return true;

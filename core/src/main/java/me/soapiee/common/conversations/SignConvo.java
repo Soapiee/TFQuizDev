@@ -29,13 +29,13 @@ public class SignConvo extends MessagePrompt {
 
     @Override
     public @NotNull String getPromptText(@NotNull ConversationContext conversationContext) {
-        return Utils.colour(messageManager.get(Message.SIGNCONVOSTART));
+        return Utils.addColour(messageManager.get(Message.SIGNCONVOSTART));
     }
 
     private class askForLinePrompt extends NumericPrompt {
         @Override
         public @NotNull String getPromptText(@NotNull ConversationContext conversationContext) {
-            return Utils.colour(messageManager.get(Message.SIGNCONVOLINEPROMPT));
+            return Utils.addColour(messageManager.get(Message.SIGNCONVOLINEPROMPT));
         }
 
         @Override
@@ -51,7 +51,7 @@ public class SignConvo extends MessagePrompt {
 
         @Override
         protected String getFailedValidationText(ConversationContext context, Number invalidInput) {
-            return Utils.colour(messageManager.get(Message.SIGNCONVOLINEINVALID));
+            return Utils.addColour(messageManager.get(Message.SIGNCONVOLINEINVALID));
         }
     }
 
@@ -60,7 +60,7 @@ public class SignConvo extends MessagePrompt {
         @Override
         public @NotNull String getPromptText(@NotNull ConversationContext conversationContext) {
             int lineNo = (int) conversationContext.getSessionData("line") + 1;
-            return Utils.colour(messageManager.getWithPlaceholder(Message.SIGNCONVOTEXTPROMPT, lineNo));
+            return Utils.addColour(messageManager.getWithPlaceholder(Message.SIGNCONVOTEXTPROMPT, lineNo));
         }
 
         @Override
@@ -93,7 +93,7 @@ public class SignConvo extends MessagePrompt {
             Player player = (Player) conversationContext.getForWhom();
             String signID = player.getPersistentDataContainer().get(Keys.GAME_SIGN, PersistentDataType.STRING);
 
-            return Utils.colour(Utils.colour(messageManager.getWithPlaceholder(Message.SIGNEDITED, signID)));
+            return Utils.addColour(Utils.addColour(messageManager.getWithPlaceholder(Message.SIGNEDITED, signID)));
         }
     }
 }

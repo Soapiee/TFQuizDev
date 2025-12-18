@@ -67,14 +67,14 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof CommandBlock) return true;
 
-        String adminHelp = Utils.colour(messageManager.get(Message.ADMINCMDUSAGE));
+        String adminHelp = Utils.addColour(messageManager.get(Message.ADMINCMDUSAGE));
         if (args.length == 0) {
             sender.sendMessage(adminHelp);
             return true;
         }
 
         if (sender instanceof Player && !sender.hasPermission("tfquiz.admin.*")) {
-            sender.sendMessage(Utils.colour(messageManager.get(Message.NOPERMISSION)));
+            sender.sendMessage(Utils.addColour(messageManager.get(Message.NOPERMISSION)));
             return true;
         }
 
@@ -85,7 +85,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         switch (argument) {
             case "reload":
                 if (sender instanceof Player && !sender.hasPermission("TFQuiz.reload")) {
-                    sender.sendMessage(Utils.colour(messageManager.get(Message.NOPERMISSION)));
+                    sender.sendMessage(Utils.addColour(messageManager.get(Message.NOPERMISSION)));
                     return true;
                 }
                 if (args.length == 1) {
@@ -109,31 +109,31 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                     //not console or a player
                     return true;
                 }
-                sender.sendMessage(Utils.colour(messageManager.get(Message.ADMINRELOADCMDUSAGE)));
+                sender.sendMessage(Utils.addColour(messageManager.get(Message.ADMINRELOADCMDUSAGE)));
                 return true;
 
             case "setspawn":
                 if (player == null) { // sender is console
-                    sender.sendMessage(Utils.colour(messageManager.get(Message.CONSOLEUSAGEERROR)));
+                    sender.sendMessage(Utils.addColour(messageManager.get(Message.CONSOLEUSAGEERROR)));
                     return true;
                 }
                 if (args.length != 1) {
-                    sender.sendMessage(Utils.colour(messageManager.get(Message.ADMINSETLOBBYSPAWNCMDUSAGE)));
+                    sender.sendMessage(Utils.addColour(messageManager.get(Message.ADMINSETLOBBYSPAWNCMDUSAGE)));
                     return true;
                 }
                 gameManager.setLobbySpawn(player.getLocation());
-                sender.sendMessage(Utils.colour(messageManager.get(Message.ADMINSETLOBBYSPAWN)));
+                sender.sendMessage(Utils.addColour(messageManager.get(Message.ADMINSETLOBBYSPAWN)));
                 return true;
             case "list":
                 if (args.length != 1) {
-                    sender.sendMessage(Utils.colour(messageManager.get(Message.ADMINLISTCMDUSAGE)));
+                    sender.sendMessage(Utils.addColour(messageManager.get(Message.ADMINLISTCMDUSAGE)));
                     return true;
                 }
 
-                sender.sendMessage(Utils.colour(messageManager.get(Message.GAMELISTHEADER)));
+                sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMELISTHEADER)));
                 for (Game game : gameManager.getGames()) {
                     String list = messageManager.getWithPlaceholder(Message.GAMELIST, game);
-                    sender.sendMessage(Utils.colour(list));
+                    sender.sendMessage(Utils.addColour(list));
                 }
                 return true;
             case "removeholos":
@@ -149,7 +149,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                             count++;
                         }
                     }
-                    sender.sendMessage(Utils.colour("&a" + count + " holograms were removed near you"));
+                    sender.sendMessage(Utils.addColour("&a" + count + " holograms were removed near you"));
                     return true;
                 }
 
@@ -160,11 +160,11 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                             count++;
                         }
                     }
-                    sender.sendMessage(Utils.colour("&a" + count + " holograms were removed"));
+                    sender.sendMessage(Utils.addColour("&a" + count + " holograms were removed"));
                     return true;
                 }
 
-                sender.sendMessage(Utils.colour(adminHelp));
+                sender.sendMessage(Utils.addColour(adminHelp));
                 return true;
 
             case "spec": // /tf spec <player>
@@ -195,7 +195,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
 //
                 String gameHelp = messageManager.get(Message.GAMEADMINCMDUSAGE);
                 if (args.length < 3 || args.length > 5) {
-                    sender.sendMessage(Utils.colour(gameHelp));
+                    sender.sendMessage(Utils.addColour(gameHelp));
                     return true;
                 }
 
@@ -205,11 +205,11 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                     gameID = Integer.parseInt(args[1]);
                     game = gameManager.getGame(gameID);
                 } catch (NumberFormatException | NullPointerException ex) {
-                    sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEINVALIDGAMEID)));
+                    sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMEINVALIDGAMEID)));
                     return true;
                 }
                 if (game == null) {
-                    sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEINVALIDGAMEID)));
+                    sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMEINVALIDGAMEID)));
                     return true;
                 }
 
@@ -229,20 +229,20 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                             return true;
                         }
                         if (player == null) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.CONSOLEUSAGEERROR)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.CONSOLEUSAGEERROR)));
                             return true;
                         }
                         Player player1 = (Player) sender;
                         game.setSpawnLocation(player1.getLocation());
-                        sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMESPAWNSET, game.getID())));
+                        sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMESPAWNSET, game.getID())));
                         return true;
                     case "setholospawn":
                         if (player == null) { // sender is console
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.CONSOLEUSAGEERROR)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.CONSOLEUSAGEERROR)));
                             return true;
                         }
                         if (args.length != 3) {
-                            sender.sendMessage(Utils.colour(gameHelp));
+                            sender.sendMessage(Utils.addColour(gameHelp));
                             return true;
                         }
 
@@ -253,191 +253,191 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                         game.updateHologramSpawn(player.getLocation());
                         if (game.getState() != GameState.LIVE && game.getDescType().equals("hologram") || game.getDescType().equals("both"))
                             game.getHologram().spawn();
-                        sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEHOLOSPAWNSET, game.getID())));
+                        sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEHOLOSPAWNSET, game.getID())));
                         return true;
                     case "open":
                         if (args.length != 3) {
-                            sender.sendMessage(Utils.colour(gameHelp));
+                            sender.sendMessage(Utils.addColour(gameHelp));
                             return true;
                         }
 
                         //Check if it has a scheduler
                         if (gameManager.getScheduler(game.getID()) != null) {
-                            sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEOPENEDERROR2, game)));
+                            sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEOPENEDERROR2, game)));
                             return true;
                         }
 
                         if (game.getState() == GameState.CLOSED) {
                             game.setState(GameState.RECRUITING);
-                            sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEOPENED, game)));
+                            sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEOPENED, game)));
                         } else {
-                            sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEOPENEDERROR, game)));
+                            sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEOPENEDERROR, game)));
                         }
                         return true;
                     case "close":
                         if (args.length != 3) {
-                            sender.sendMessage(Utils.colour(gameHelp));
+                            sender.sendMessage(Utils.addColour(gameHelp));
                             return true;
                         }
 
                         //Check if it has a scheduler
                         if (gameManager.getScheduler(game.getID()) != null) {
-                            sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMECLOSEDERROR2, game)));
+                            sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMECLOSEDERROR2, game)));
                             return true;
                         }
 
                         if (game.getState() == GameState.RECRUITING || game.getState() == GameState.COUNTDOWN) {
                             game.reset(true, true);
                             game.setState(GameState.CLOSED);
-                            sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMECLOSED, game)));
+                            sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMECLOSED, game)));
                         } else {
-                            sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMECLOSEDERROR, game)));
+                            sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMECLOSEDERROR, game)));
                         }
                         return true;
                     case "start": // /tf game <gameID> start
                         if (args.length != 3) {
-                            sender.sendMessage(Utils.colour(gameHelp));
+                            sender.sendMessage(Utils.addColour(gameHelp));
                             return true;
                         }
 
                         //Check if it has a scheduler
                         if (gameManager.getScheduler(game.getID()) != null) {
-                            sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMESTARTSCHEDULERERROR, game)));
+                            sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMESTARTSCHEDULERERROR, game)));
                             return true;
                         }
 
 
                         if (game.getState() == GameState.LIVE || game.getState() == GameState.COUNTDOWN) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEFORCESTARTERROR)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMEFORCESTARTERROR)));
                             return true;
                         }
 
                         if (game.getState() == GameState.CLOSED) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.GAMESTARTCLOSEDERROR)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMESTARTCLOSEDERROR)));
                             return true;
                         }
 
                         //Check there is at least 1 player
                         if (game.getAllPlayers().isEmpty()) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.GAMESTARTEMPTYERROR)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMESTARTEMPTYERROR)));
                             return true;
                         }
 
                         game.forceStart();
                         game.getCountdown().start();
-                        sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEFORCESTARTED, game)));
+                        sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEFORCESTARTED, game)));
                         return true;
                     case "end": // /tf game <gameID> end -without
                         if (args.length == 5) {
-                            sender.sendMessage(Utils.colour(gameHelp));
+                            sender.sendMessage(Utils.addColour(gameHelp));
                             return true;
                         }
 
                         //Check if it has a scheduler
                         if (gameManager.getScheduler(game.getID()) != null) {
-                            sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEENDSCHEDULERERROR, game)));
+                            sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEENDSCHEDULERERROR, game)));
                             return true;
                         }
 
                         if (game.getState() == GameState.CLOSED || game.getState() == GameState.RECRUITING) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEFORCEENDERROR)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMEFORCEENDERROR)));
                             return true;
                         }
 
                         if (game.getState() == GameState.COUNTDOWN) {
                             game.reset(false, false);
-                            sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEFORCEENDED, gameID)));
+                            sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEFORCEENDED, gameID)));
                             return true;
                         }
 
                         if (game.getState() == GameState.LIVE) {
                             if (args.length == 4 && args[3].equals("-without")) {
                                 game.reset(true, true); //without winners
-                                sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEFORCEENDED, gameID)));
+                                sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEFORCEENDED, gameID)));
                             } else { // with winners
                                 game.end();
-                                sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEFORCEENDEDWITHWINNERS, gameID)));
+                                sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEFORCEENDEDWITHWINNERS, gameID)));
                             }
                         }
                         return true;
                     case "addplayer": // /tf game <gameID> addplayer <playerName>
                         if (args.length != 4) {
-                            sender.sendMessage(Utils.colour(gameHelp));
+                            sender.sendMessage(Utils.addColour(gameHelp));
                             return true;
                         }
 
                         if (game.getState() == GameState.LIVE || game.getState() == GameState.CLOSED) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEPLAYERADDEDERROR)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMEPLAYERADDEDERROR)));
                         } else {
                             Player target = Bukkit.getPlayer(args[3]);
                             if (target == null) {
-                                sender.sendMessage(Utils.colour(messageManager.get(Message.PLAYERNOTFOUND)));
+                                sender.sendMessage(Utils.addColour(messageManager.get(Message.PLAYERNOTFOUND)));
                                 return true;
                             }
                             if (gameManager.getGame(target) != null) {
-                                sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEPLAYERALREADYINGAME, target.getName())));
+                                sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEPLAYERALREADYINGAME, target.getName())));
                                 return true;
                             }
                             int outcome = game.addPlayer(target);
                             switch (outcome) {
                                 case 1:
-                                    sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEINVALIDGAMEMODEOTHER)));
+                                    sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMEINVALIDGAMEMODEOTHER)));
                                     return true;
                                 case 2:
-                                    sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEINVALIDSTATE)));
+                                    sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMEINVALIDSTATE)));
                                     return true;
                                 case 3:
-                                    sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEFULL)));
+                                    sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMEFULL)));
                                     return true;
                                 case 0:
-                                    sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEPLAYERADDED, target.getName(), gameID)));
+                                    sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEPLAYERADDED, target.getName(), gameID)));
                                     return true;
                             }
                         }
                         return true;
                     case "removeplayer": // /tf game <gameID> removeplayer <playerName>
                         if (args.length != 4) {
-                            sender.sendMessage(Utils.colour(gameHelp));
+                            sender.sendMessage(Utils.addColour(gameHelp));
                             return true;
                         }
 
                         Player target = Bukkit.getPlayer(args[3]);
                         if (target == null) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.PLAYERNOTFOUND)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.PLAYERNOTFOUND)));
                             return true;
                         }
 
                         Game targetsGame = gameManager.getGame(target);
                         if (targetsGame == null || targetsGame.getID() != gameID) {
-                            sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEPLAYERNOTINGAME, target.getName())));
+                            sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEPLAYERNOTINGAME, target.getName())));
                             return true;
                         } else {
-                            target.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.FORCEDGAMELEAVE, gameID)));
+                            target.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.FORCEDGAMELEAVE, gameID)));
                             game.removePlayer(target);
-                            sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEPLAYERREMOVED, target.getName(), gameID)));
+                            sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEPLAYERREMOVED, target.getName(), gameID)));
                         }
                         return true;
                     case "info": // /tf game <gameID> info
                         if (args.length != 3) {
-                            sender.sendMessage(Utils.colour(gameHelp));
+                            sender.sendMessage(Utils.addColour(gameHelp));
                             return true;
                         }
 
-                        sender.sendMessage(Utils.colour(messageManager.getInfo(Message.GAMEINFO, game)));
+                        sender.sendMessage(Utils.addColour(messageManager.getInfo(Message.GAMEINFO, game)));
                         return true;
                     default:
-                        sender.sendMessage(Utils.colour(gameHelp));
+                        sender.sendMessage(Utils.addColour(gameHelp));
                         return true;
                 }
             case "sign":
                 // /tf sign remove|edit (Looking at sign)
                 // /tf sign add|remove|edit <ID> ...
                 if (!sender.hasPermission("tfquiz.admin.signs")) {
-                    sender.sendMessage(Utils.colour(messageManager.get(Message.NOPERMISSION)));
+                    sender.sendMessage(Utils.addColour(messageManager.get(Message.NOPERMISSION)));
                     return true;
                 }
 
-                String signHelp = Utils.colour(messageManager.get(Message.SIGNADMINCMDUSAGE));
+                String signHelp = Utils.addColour(messageManager.get(Message.SIGNADMINCMDUSAGE));
 
                 if (args.length < 2) {
                     sender.sendMessage(signHelp);
@@ -445,16 +445,16 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 }
                 if (player == null) { //is console
                     if (args[1].equals("add")) {
-                        sender.sendMessage(Utils.colour(messageManager.get(Message.CONSOLEUSAGEERROR)));
+                        sender.sendMessage(Utils.addColour(messageManager.get(Message.CONSOLEUSAGEERROR)));
                         return true;
                     }
                     if (!args[1].equals("list") && args.length < 3) {
-                        sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNINVALIDSIGNID)));
+                        sender.sendMessage(Utils.addColour(messageManager.get(Message.SIGNINVALIDSIGNID)));
                         return true;
                     }
                 }
 
-                String notLookingAtGameSign = Utils.colour(messageManager.get(Message.SIGNNOTLOOKINGATGAMESIGN));
+                String notLookingAtGameSign = Utils.addColour(messageManager.get(Message.SIGNNOTLOOKINGATGAMESIGN));
 
                 switch (args[1].toLowerCase()) {
                     case "list":
@@ -463,17 +463,17 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                             return true;
                         }
 
-                        sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNLISTHEADER)));
+                        sender.sendMessage(Utils.addColour(messageManager.get(Message.SIGNLISTHEADER)));
                         for (Game games : gameManager.getGames()) {
                             for (GameSign signs : games.getSigns()) {
                                 String message = messageManager.getWithPlaceholder(Message.SIGNLISTFORMAT, signs.getID(), games.getID());
                                 if (player != null) {
-                                    TextComponent clickableText = new TextComponent(Utils.colour(message));
+                                    TextComponent clickableText = new TextComponent(Utils.addColour(message));
                                     clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tf sign teleport " + signs.getID()));
-                                    clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(Utils.colour(messageManager.get(Message.SIGNLISTHOVER)))));
+                                    clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(Utils.addColour(messageManager.get(Message.SIGNLISTHOVER)))));
                                     player.spigot().sendMessage(clickableText);
                                 } else {
-                                    sender.sendMessage(Utils.colour(message));
+                                    sender.sendMessage(Utils.addColour(message));
                                 }
                             }
                         }
@@ -481,13 +481,13 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
 
                     case "teleport": // /tf sign teleport <signID>
                         if (player == null) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.CONSOLEUSAGEERROR)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.CONSOLEUSAGEERROR)));
                             return true;
                         }
 
                         GameSign sign = gameManager.getSign(args[2]);
                         if (sign == null) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNINVALIDSIGNID)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.SIGNINVALIDSIGNID)));
                             return true;
                         }
                         new TeleportTask(player, sign.getLocation()).runTaskLater(main, 1);
@@ -506,19 +506,19 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                             Integer.parseInt(args[2]);
                             lineNo = Integer.parseInt(args[3]) - 1;
                         } catch (NumberFormatException ex) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNEDITIDCMDUSAGE)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.SIGNEDITIDCMDUSAGE)));
                             return true;
                         }
                         String signID = args[2];
 
                         if (lineNo < 0 || lineNo > 3) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNINVALIDLINENUM)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.SIGNINVALIDLINENUM)));
                             return true;
                         }
 
                         GameSign gameSign = gameManager.getSign(signID);
                         if (gameSign == null) {
-                            sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNINVALIDSIGNID)));
+                            sender.sendMessage(Utils.addColour(messageManager.get(Message.SIGNINVALIDSIGNID)));
                             return true;
                         }
 
@@ -532,7 +532,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                         gameSign.update((lineNo - 1), builder.toString());
                         gameManager.saveSign(gameSign);
 
-                        sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.SIGNEDITED, signID)));
+                        sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.SIGNEDITED, signID)));
                         return true;
 
                     case "add":
@@ -544,7 +544,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                             sender.sendMessage(signHelp);
                             return true;
                         }
-                        String invalidGameID = Utils.colour(messageManager.get(Message.GAMEINVALIDGAMEID));
+                        String invalidGameID = Utils.addColour(messageManager.get(Message.GAMEINVALIDGAMEID));
                         if (args.length == 2 && args[1].equals("add")) {
                             sender.sendMessage(invalidGameID);
                             return true;
@@ -557,7 +557,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                             } catch (NumberFormatException ex) {
                                 if (args[1].equals("add")) sender.sendMessage(invalidGameID);
                                 else
-                                    sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNINVALIDSIGNID)));
+                                    sender.sendMessage(Utils.addColour(messageManager.get(Message.SIGNINVALIDSIGNID)));
                                 return true;
                             }
                             inputID = args[2];
@@ -588,7 +588,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                                 return true;
                             }
                             if (args[1].equals("add")) {
-                                player.sendMessage(Utils.colour(messageManager.get(Message.SIGNNOTLOOKINGATSIGN)));
+                                player.sendMessage(Utils.addColour(messageManager.get(Message.SIGNNOTLOOKINGATSIGN)));
                                 return true;
                             }
                         }
@@ -602,24 +602,24 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                             case "add":
                                 //Checks the sign isn't already a game sign
                                 if (dataContainer != null && gameManager.getSign(dataContainer) != null) {
-                                    sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNALREADYEXISTS)));
+                                    sender.sendMessage(Utils.addColour(messageManager.get(Message.SIGNALREADYEXISTS)));
                                     return true;
                                 }
 
                                 //Checks the gameID relates to a configured game
                                 if (gameManager.getGame(Integer.parseInt(inputID)) == null) {
-                                    sender.sendMessage(Utils.colour(messageManager.get(Message.GAMEINVALIDGAMEID)));
+                                    sender.sendMessage(Utils.addColour(messageManager.get(Message.GAMEINVALIDGAMEID)));
                                     return true;
                                 }
 
                                 gameManager.saveSign(signBlock, Integer.parseInt(inputID));
-                                player.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.SIGNADDED, inputID)));
+                                player.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.SIGNADDED, inputID)));
                                 return true;
 
                             case "remove":
                                 //Checks the signID relates to a configured game sign
                                 if (gameManager.getSign(inputID) == null) {
-                                    sender.sendMessage(Utils.colour(messageManager.get(Message.SIGNINVALIDSIGNID)));
+                                    sender.sendMessage(Utils.addColour(messageManager.get(Message.SIGNINVALIDSIGNID)));
                                     return true;
                                 }
 
@@ -627,7 +627,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                                 if (player != null)
                                     signToRemove.getLocation().getWorld().dropItem(signToRemove.getLocation(), new ItemStack(signToRemove.getMaterial()));
                                 gameManager.deleteSign(inputID);
-                                sender.sendMessage(Utils.colour(messageManager.getWithPlaceholder(Message.SIGNREMOVED, inputID)));
+                                sender.sendMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.SIGNREMOVED, inputID)));
                                 return true;
                         }
                     default:

@@ -87,7 +87,7 @@ public class Game {
             if (!broadcastWinners)
                 this.sendMessage(this.messageManager.getWithPlaceholder(Message.GAMEMNOWINNERBROADCAST, this.getID()));
             else
-                Bukkit.broadcastMessage(Utils.colour(this.messageManager.getWithPlaceholder(Message.GAMEMNOWINNERBROADCAST, this.getID())));
+                Bukkit.broadcastMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMEMNOWINNERBROADCAST, this.getID())));
             return;
         }
 
@@ -98,7 +98,7 @@ public class Game {
             if (!broadcastWinners)
                 this.sendMessage(messageManager.getWithPlaceholder(Message.GAMEMSINGLEPLAYERBROADCAST, player.getName(), this.getID()));
             else
-                Bukkit.broadcastMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEMSINGLEPLAYERBROADCAST, player.getName(), this.getID())));
+                Bukkit.broadcastMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEMSINGLEPLAYERBROADCAST, player.getName(), this.getID())));
             return;
         }
 
@@ -120,7 +120,7 @@ public class Game {
         if (!broadcastWinners)
             this.sendMessage(messageManager.getWithPlaceholder(Message.GAMEMULTIPLAYERBROADCAST, winners.toString(), this.getID()));
         else
-            Bukkit.broadcastMessage(Utils.colour(messageManager.getWithPlaceholder(Message.GAMEMULTIPLAYERBROADCAST, winners.toString(), this.getID())));
+            Bukkit.broadcastMessage(Utils.addColour(messageManager.getWithPlaceholder(Message.GAMEMULTIPLAYERBROADCAST, winners.toString(), this.getID())));
     }
 
     public void start() {
@@ -137,7 +137,7 @@ public class Game {
         if (kickPlayers) {
             for (Player player : this.getAllPlayers()) {
                 if (removedMessage)
-                    player.sendMessage(Utils.colour(this.messageManager.getWithPlaceholder(Message.GAMEPLAYERREMOVEDTARGET, this.getID())));
+                    player.sendMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMEPLAYERREMOVEDTARGET, this.getID())));
 
                 if (this.physicalArena) {
                     if (this.isSpectator(player)) {
@@ -189,8 +189,8 @@ public class Game {
         this.allPlayers.add(player);
         this.playingPlayers.add(player);
 
-        player.sendMessage(Utils.colour(this.messageManager.getWithPlaceholder(Message.GAMEJOIN, this)));
-        this.sendMessage(Utils.colour(this.messageManager.getWithPlaceholder(Message.GAMEOTHERJOINED, this, player.getName())), player);
+        player.sendMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMEJOIN, this)));
+        this.sendMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMEOTHERJOINED, this, player.getName())), player);
 
         if (this.physicalArena) {
             new TeleportTask(player, this.spawn).runTaskLater(main, 1);
@@ -198,7 +198,7 @@ public class Game {
         }
 
         if (!this.specs.getDescType().equalsIgnoreCase("hologram")) {
-            player.sendMessage(Utils.colour(this.messageManager.get(Message.GAMEDESC)));
+            player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMEDESC)));
         }
 
         if (this.state == GameState.RECRUITING && this.allPlayers.size() >= this.getMinPlayers()) {
@@ -225,7 +225,7 @@ public class Game {
         }
 
         if (this.state != GameState.LIVE)
-            this.sendMessage(Utils.colour(this.messageManager.getWithPlaceholder(Message.GAMEOTHERLEFT, this, player.getName())));
+            this.sendMessage(Utils.addColour(this.messageManager.getWithPlaceholder(Message.GAMEOTHERLEFT, this, player.getName())));
 
 
         if (this.allPlayers.size() < this.getMinPlayers()) {
@@ -264,21 +264,21 @@ public class Game {
 
     public void sendMessage(String message) {
         for (Player player : this.allPlayers) {
-            Bukkit.getPlayer(player.getUniqueId()).sendMessage(Utils.colour(message));
+            Bukkit.getPlayer(player.getUniqueId()).sendMessage(Utils.addColour(message));
         }
     }
 
     public void sendMessage(String message, Player excludingPlayer) {
         for (Player player : this.allPlayers) {
             if (player == excludingPlayer) continue;
-            Bukkit.getPlayer(player.getUniqueId()).sendMessage(Utils.colour(message));
+            Bukkit.getPlayer(player.getUniqueId()).sendMessage(Utils.addColour(message));
         }
     }
 
     public void sendTitle(String title, String subtitle) {
         for (Player player : this.playingPlayers) {
-            Bukkit.getPlayer(player.getUniqueId()).sendTitle(Utils.colour(title), Utils.colour(subtitle), 20, 20, 20);
-            Bukkit.getPlayer(player.getUniqueId()).sendTitle(Utils.colour(title), Utils.colour(subtitle), 20, 20, 20);
+            Bukkit.getPlayer(player.getUniqueId()).sendTitle(Utils.addColour(title), Utils.addColour(subtitle), 20, 20, 20);
+            Bukkit.getPlayer(player.getUniqueId()).sendTitle(Utils.addColour(title), Utils.addColour(subtitle), 20, 20, 20);
         }
     }
 
@@ -359,7 +359,7 @@ public class Game {
     public void addSpectator(Player player) {
         if (!this.specManager.setSpectator(player)) {
             this.removePlayer(player);
-            player.sendMessage(Utils.colour(this.messageManager.get(Message.GAMESPECTATORERROR)));
+            player.sendMessage(Utils.addColour(this.messageManager.get(Message.GAMESPECTATORERROR)));
             return;
         }
 

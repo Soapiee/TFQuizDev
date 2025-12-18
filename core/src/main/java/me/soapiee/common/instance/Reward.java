@@ -83,7 +83,7 @@ public class Reward {
                         player.getInventory().addItem(item);
                     } else {
                         player.getLocation().getWorld().dropItem(player.getLocation(), item);
-                        player.sendMessage(Utils.colour(messageManager.get(Message.GAMEITEMWINERROR)));
+                        player.sendMessage(Utils.addColour(messageManager.get(Message.GAMEITEMWINERROR)));
                         return;
                     }
                 }
@@ -96,7 +96,7 @@ public class Reward {
             case NONE:
                 break;
         }
-        if (getMessage() != null) player.sendMessage(Utils.colour(getMessage()));
+        if (getMessage() != null) player.sendMessage(Utils.addColour(getMessage()));
     }
 
     public RewardType getType() {

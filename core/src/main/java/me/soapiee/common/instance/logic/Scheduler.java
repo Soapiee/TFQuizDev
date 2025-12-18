@@ -39,9 +39,9 @@ public class Scheduler extends BukkitRunnable {
         if (game.getState() != GameState.RECRUITING) game.setState(GameState.RECRUITING);
 
         String message = main.getMessageManager().getWithPlaceholder(Message.GAMEOPENEDSCHEDULER, game.getID());
-        TextComponent clickableText = new TextComponent(Utils.colour(message));
+        TextComponent clickableText = new TextComponent(Utils.addColour(message));
         clickableText.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/game join " + game.getID()));
-        clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(Utils.colour(main.getMessageManager().get(Message.GAMESOPENSCHEDULERHOVER)))));
+        clickableText.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(Utils.addColour(main.getMessageManager().get(Message.GAMESOPENSCHEDULERHOVER)))));
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.spigot().sendMessage(clickableText);
         }

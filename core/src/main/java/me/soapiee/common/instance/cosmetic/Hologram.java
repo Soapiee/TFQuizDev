@@ -27,7 +27,7 @@ public class Hologram {
             armourStand.setInvulnerable(true);
             armourStand.getPersistentDataContainer().set(Keys.HOLOGRAM_ARMOURSTAND, PersistentDataType.BYTE, (byte) 1);
             armourStand.setCustomNameVisible(true);
-            armourStand.setCustomName(Utils.colour(line));
+            armourStand.setCustomName(Utils.addColour(line));
             this.spawnPoint.subtract(0, 0.25, 0);
         }
         double change = 0.25 * this.text.length;

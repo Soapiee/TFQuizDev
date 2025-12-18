@@ -17,23 +17,21 @@ public class Utils {
         Bukkit.getConsoleSender().sendMessage(prefix + " " + message);
     }
 
-    public static String colour(String message) { // 1.8 and above
-        Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
-        Matcher matcher = pattern.matcher(message);
+    public static String addColour(String message) {
+        Matcher matcher = Pattern.compile("#([A-Fa-f0-9]{6})").matcher(message);
+        StringBuffer buffer = new StringBuffer();
+
         while (matcher.find()) {
-            String hexCode = message.substring(matcher.start(), matcher.end());
-            String replaceSharp = hexCode.replace('#', 'x');
-
-            char[] ch = replaceSharp.toCharArray();
-            StringBuilder builder = new StringBuilder("");
-            for (char c : ch) {
-                builder.append("&" + c);
+            String color = matcher.group(1);
+            StringBuilder replacement = new StringBuilder("§x");
+            for (char c : color.toCharArray()) {
+                replacement.append('§').append(c);
             }
-
-            message = message.replace(hexCode, builder.toString());
-            matcher = pattern.matcher(message);
+            matcher.appendReplacement(buffer, replacement.toString());
         }
-        return ChatColor.translateAlternateColorCodes('&', message);
+        matcher.appendTail(buffer);
+
+        return ChatColor.translateAlternateColorCodes('&', buffer.toString());
     }
 
     public static boolean hasFreeSpace(Material type, int amount, Player player) {
